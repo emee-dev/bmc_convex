@@ -9,13 +9,22 @@ import { Password } from "@convex-dev/auth/providers/Password";
 import { convexAuth, getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 import { Doc } from "./_generated/dataModel";
-import { MutationCtx, query } from "./_generated/server";
+import { mutation, MutationCtx, query } from "./_generated/server";
 import { Templates } from "@/lib/utils";
 
 export type Variables = Doc<"email_variables">["variables"];
 
 export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
-  providers: [Password],
+  providers: [
+    Password({
+      profile(params, ctx) {
+        return {
+          first_name: params?.first_name as string,
+          email: params?.email as string,
+        };
+      },
+    }),
+  ],
   callbacks: {
     // Initialize default templates, variables, and utility file for a newly created or updated creator
     async afterUserCreatedOrUpdated(ctx: MutationCtx, { userId }) {
@@ -82,7 +91,7 @@ export const { auth, signIn, signOut, store, isAuthenticated } = convexAuth({
         name: "Utility file",
         templateId: "utils",
         file_content: utils,
-        default_template: "Jsx",
+        default_template: "Jsx", // utils file is supported only in Jsx mode
       });
 
       console.log(`Saving email variables for user: ${userId}`);
@@ -105,6 +114,18 @@ export const loggedInUser = query({
   },
 });
 
+export const getCreator = query({
+  args: { userId: v.string() },
+  handler: async (ctx, args) => {
+    const record = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("_id"), args.userId))
+      .first();
+
+    return record;
+  },
+});
+
 export const isConnected = query({
   args: { userId: v.string() },
   handler: async (ctx, args) => {
@@ -114,5 +135,20 @@ export const isConnected = query({
       .first();
 
     return !!record?.userId;
+  },
+});
+
+export const updateUser = mutation({
+  args: {
+    page_description: v.optional(v.string()),
+    twitter: v.optional(v.string()),
+    github: v.optional(v.string()),
+    first_name: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) return null;
+
+    await ctx.db.patch(userId, args);
   },
 });

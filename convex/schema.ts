@@ -2,7 +2,23 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 import { authTables } from "@convex-dev/auth/server";
 
-const applicationTables = {
+const schema = defineSchema({
+  ...authTables,
+  users: defineTable({
+    first_name: v.optional(v.string()),
+    image: v.optional(v.string()),
+    email: v.optional(v.string()),
+    emailVerificationTime: v.optional(v.number()),
+    phone: v.optional(v.string()),
+    phoneVerificationTime: v.optional(v.number()),
+    isAnonymous: v.optional(v.boolean()),
+    // Creator specific values
+    page_description: v.optional(v.string()),
+    posts_url: v.optional(v.string()),
+    membership_url: v.optional(v.string()),
+    twitter: v.optional(v.string()),
+    github: v.optional(v.string()),
+  }).index("email", ["email"]),
   templates: defineTable({
     userId: v.string(),
     name: v.string(),
@@ -32,18 +48,26 @@ const applicationTables = {
   }),
   // TODO rename to donations
   donations: defineTable({
-    userId: v.string(),
+    creatorId: v.id("users"),
     amount: v.number(),
     is_monthly: v.boolean(),
     name: v.optional(v.string()),
-    email: v.optional(v.string()),
+    email: v.string(),
     message: v.optional(v.string()),
-    tier: v.union(v.literal("Gold"), v.literal("Silver"), v.literal("Bronse")),
+    tier: v.union(v.literal("Gold"), v.literal("Silver"), v.literal("Bronze")),
+  }),
+  newsletters: defineTable({
+    creatorId: v.id("users"),
+    title: v.string(),
+    description: v.string(),
+    date: v.string(),
+    imageUrl: v.optional(v.string()),
+    jsx: v.string(),
+    html: v.string(),
   }),
   newsletter_subscriptions: defineTable({
-    userId: v.string(),
-    amount: v.number(),
-    email: v.string(),
+    creatorId: v.id("users"),
+    supporter_email: v.string(),
   }),
   email_variables: defineTable({
     userId: v.string(),
@@ -58,9 +82,6 @@ const applicationTables = {
       })
     ),
   }),
-};
-
-export default defineSchema({
-  ...authTables,
-  ...applicationTables,
 });
+
+export default schema;

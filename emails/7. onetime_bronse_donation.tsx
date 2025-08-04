@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Body,
   Container,
@@ -5,7 +6,7 @@ import {
   Heading,
   Html,
   Preview,
-  Text
+  Text,
 } from "@react-email/components";
 import { EmailProps, styles } from "./utils";
 

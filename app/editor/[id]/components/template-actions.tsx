@@ -10,12 +10,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { VarsDialog } from "@/components/variable-dialog";
-import { useVariables } from "@/hooks/use-vars";
-import { useState } from "react";
+import {
+  useVariableActions,
+  useVariableDialog,
+  useVariables,
+} from "@/hooks/use-vars";
 
 export function TemplateActions() {
   const variables = useVariables();
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const isVariableDialogOpen = useVariableDialog();
+  const { toggleVarsDialog } = useVariableActions();
 
   return (
     <>
@@ -27,18 +31,18 @@ export function TemplateActions() {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem onClick={() => setDialogOpen(!dialogOpen)}>
+          <DropdownMenuItem
+            onClick={() => toggleVarsDialog(!isVariableDialogOpen)}
+          >
             <FilePenLineIcon className="w-4 h-4 mr-1" />
             Edit variables
           </DropdownMenuItem>
-
-          <DropdownMenuItem>Cancel</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <VarsDialog
         variables={variables}
-        dialogOpen={dialogOpen}
-        setDialogOpen={setDialogOpen}
+        dialogOpen={isVariableDialogOpen}
+        setDialogOpen={toggleVarsDialog}
       />
     </>
   );

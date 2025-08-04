@@ -1,6 +1,6 @@
 "use client";
 
-import { useVariables, Variable } from "@/hooks/use-vars";
+import { Variable } from "@/hooks/use-vars";
 import { cn } from "@/lib/utils";
 import { closeBrackets, closeBracketsKeymap } from "@codemirror/autocomplete";
 import {
@@ -30,8 +30,9 @@ import {
   placeholder,
   rectangularSelection,
 } from "@codemirror/view";
-import { CSSProperties, useEffect, useRef } from "react";
+import { CSSProperties, RefObject, useEffect, useRef } from "react";
 import { variables } from "./editor-utils";
+import { vscodeLight } from "@uiw/codemirror-theme-vscode";
 
 interface CodeEditorProps {
   value: string;
@@ -42,6 +43,9 @@ interface CodeEditorProps {
   onChange?: (value: string) => void;
   language?: "text" | "javascript";
   placeholder?: string;
+  vars?: Variable[];
+  ref?: RefObject<EditorView | null>;
+  enableVars?: boolean;
 }
 
 type Css = { [selector: string]: CSSProperties };
@@ -101,14 +105,16 @@ export function CodeEditor({
   readOnly,
   lineNumbers,
   className,
+  enableVars,
   value,
+  vars,
+  ref,
   placeholder: placeholderText = "No file is selected...",
 }: CodeEditorProps) {
-  // const vars = [] as Variable[];
-  const vars = useVariables();
   const editorContainerRef = useRef<HTMLDivElement>(null);
   const viewRef = useRef<EditorView | null>(null);
   const varCompartment = useRef(new Compartment());
+  const readOnlyCompartment = useRef(new Compartment());
   const placeholderCompartment = useRef(new Compartment());
 
   const variablesRef = useRef<Variable[]>([]);
@@ -118,22 +124,30 @@ export function CodeEditor({
     if (!editorContainerRef.current) return;
     viewRef.current?.destroy();
 
-    const lang = language === "text" ? [] : javascript({ typescript: true });
+    const lang =
+      language === "text" ? [] : javascript({ jsx: true, typescript: true });
 
     const extensions: Extension[] = [
       lang,
+      vscodeLight,
       editorTheme,
       baseExtensions,
-      varCompartment.current.of(
-        variables(extIdRef.current, () => variablesRef.current)
-      ),
+      readOnlyCompartment.current.of(EditorView.editable.of(true)),
       placeholderCompartment.current.of(placeholder(placeholderText)),
       EditorView.updateListener.of((update) => {
         if (update.docChanged) onChange?.(update.state.doc.toString());
       }),
     ];
 
-    if (readOnly) extensions.push(EditorState.readOnly.of(true));
+    if (enableVars === true) {
+      extensions.push(
+        varCompartment.current.of(
+          variables(extIdRef.current, () => variablesRef.current)
+        )
+      );
+    }
+
+    // if (readOnly) extensions.push(EditorState.readOnly.of(true));
     if (lineWrap) extensions.push(EditorView.lineWrapping);
     if (lineNumbers) extensions.push(lineNumbersExtension());
 
@@ -144,17 +158,39 @@ export function CodeEditor({
       parent: editorContainerRef.current,
     });
 
+    if (ref) {
+      ref.current = viewRef.current;
+    }
+
     return () => viewRef.current?.destroy();
-  }, [language]);
+  }, [language, enableVars]);
 
   useEffect(() => {
+    if (!vars) return;
+
     variablesRef.current = vars;
     extIdRef.current += 1;
   }, [vars]);
 
+  // Configure readonly
   useEffect(() => {
     const view = viewRef.current;
     if (!view) return;
+    if (readOnly === undefined) return;
+
+    const isReadOnly = Boolean(readOnly);
+
+    view.dispatch({
+      effects: readOnlyCompartment.current.reconfigure(
+        EditorView.editable.of(isReadOnly)
+      ),
+    });
+  }, [readOnly]);
+
+  useEffect(() => {
+    const view = viewRef.current;
+    if (!view) return;
+    if (!enableVars || enableVars !== true) return;
 
     view.dispatch({
       effects: [

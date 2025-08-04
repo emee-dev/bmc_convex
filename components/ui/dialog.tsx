@@ -1,12 +1,20 @@
 "use client";
 
-import { useListVisibility, useVariableActions } from "@/hooks/use-vars";
+import {
+  useListVisibility,
+  useVariableActions,
+  useVariableDialog,
+  useVariables,
+} from "@/hooks/use-vars";
 import { cn } from "@/lib/utils";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
+import { Loader2, Save, X } from "lucide-react";
 import * as React from "react";
 import { EyeOffIcon } from "../icons/eyeoff";
 import { Button } from "./button";
+import { TooltipMsg } from "../tooltip-msg";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -49,8 +57,15 @@ const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
   ExtendedDialogContentProps
 >(({ className, children, enableOverlay, ...props }, ref) => {
+  const updateVars = useMutation(api.template.updateVariables);
+
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+
+  const variables = useVariables();
   const isDefaultListVisible = useListVisibility();
+  const isVariableDialogOpen = useVariableDialog();
   const { toggleDefaultList } = useVariableActions();
+
   return (
     <>
       <DialogPortal>
@@ -66,15 +81,47 @@ const DialogContent = React.forwardRef<
           {children}
 
           <div className="flex items-center opacity-70 transition-opacity hover:opacity-100 gap-x-2 absolute right-1 top-1.5">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="size-7 hover:bg-muted-foreground/50"
-              onClick={() => toggleDefaultList(!isDefaultListVisible)}
-            >
-              <EyeOffIcon className="h-4" />
-              <span className="sr-only">Toggle default variables</span>
-            </Button>
+            {isVariableDialogOpen && (
+              <>
+                <TooltipMsg message="Save variables">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-7 hover:bg-muted-foreground/50"
+                    onClick={async () => {
+                      try {
+                        setIsSubmitting(true);
+                        await updateVars({ updates: variables });
+                      } catch (error) {
+                        console.error("Variable error: ", error);
+                      } finally {
+                        setIsSubmitting(false);
+                      }
+                    }}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                    ) : (
+                      <Save className="h-4 w-4" />
+                    )}
+                    <span className="sr-only">Save variables</span>
+                  </Button>
+                </TooltipMsg>
+
+                <TooltipMsg message="Toggle default variables">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="size-7 hover:bg-muted-foreground/50"
+                    onClick={() => toggleDefaultList(!isDefaultListVisible)}
+                  >
+                    <EyeOffIcon className="h-4" />
+                    <span className="sr-only">Toggle default variables</span>
+                  </Button>
+                </TooltipMsg>
+              </>
+            )}
             <DialogPrimitive.Close
               className=" rounded-sm ring-offset-background focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
               asChild

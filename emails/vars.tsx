@@ -28,14 +28,6 @@ export const vars: Variable[] = [
   },
   {
     id: "4",
-    key: "creator.shop_url",
-    value: "<dynamic>",
-    is_enabled: true,
-    is_default: "yes",
-    description: "Link to the creator's shop",
-  },
-  {
-    id: "5",
     key: "creator.posts_url",
     value: "<dynamic>",
     is_enabled: true,
@@ -43,7 +35,7 @@ export const vars: Variable[] = [
     description: "Link to the creator's posts or updates",
   },
   {
-    id: "6",
+    id: "5",
     key: "creator.membership_url",
     value: "<dynamic>",
     is_enabled: true,
@@ -51,7 +43,7 @@ export const vars: Variable[] = [
     description: "Link to become a member",
   },
   {
-    id: "7",
+    id: "6",
     key: "creator.twitter",
     value: "<dynamic>",
     is_enabled: true,
@@ -59,7 +51,7 @@ export const vars: Variable[] = [
     description: "Creator's Twitter link",
   },
   {
-    id: "8",
+    id: "7",
     key: "creator.github",
     value: "<dynamic>",
     is_enabled: true,
@@ -69,7 +61,7 @@ export const vars: Variable[] = [
 
   // 🙋 Supporter/Member Variables
   {
-    id: "9",
+    id: "8",
     key: "supporter.name",
     value: "<dynamic>",
     is_enabled: true,
@@ -77,7 +69,7 @@ export const vars: Variable[] = [
     description: "Supporter's full name",
   },
   {
-    id: "10",
+    id: "9",
     key: "supporter.email",
     value: "<dynamic>",
     is_enabled: true,
@@ -85,7 +77,7 @@ export const vars: Variable[] = [
     description: "Supporter's email address",
   },
   {
-    id: "11",
+    id: "10",
     key: "supporter.tier",
     value: "<dynamic>",
     is_enabled: true,
@@ -95,7 +87,7 @@ export const vars: Variable[] = [
 
   // 📦 Donation/Purchase Variables
   {
-    id: "12",
+    id: "11",
     key: "donation.amount",
     value: "<dynamic>",
     is_enabled: true,
@@ -103,7 +95,7 @@ export const vars: Variable[] = [
     description: "Donation amount",
   },
   {
-    id: "13",
+    id: "12",
     key: "donation.currency",
     value: "<dynamic>",
     is_enabled: true,
@@ -111,7 +103,7 @@ export const vars: Variable[] = [
     description: "Currency used in the donation",
   },
   {
-    id: "14",
+    id: "13",
     key: "purchase.item_name",
     value: "<dynamic>",
     is_enabled: true,
@@ -121,7 +113,7 @@ export const vars: Variable[] = [
 
   // 📨 Email Meta/Utility Variables
   {
-    id: "15",
+    id: "14",
     key: "unsubscribe_url",
     value: "<dynamic>",
     is_enabled: true,
@@ -129,7 +121,7 @@ export const vars: Variable[] = [
     description: "Link to unsubscribe from emails",
   },
   {
-    id: "16",
+    id: "15",
     key: "current_year",
     value: "<dynamic>",
     is_enabled: true,
@@ -137,7 +129,7 @@ export const vars: Variable[] = [
     description: "The current year",
   },
   {
-    id: "17",
+    id: "16",
     key: "support_email",
     value: "<dynamic>",
     is_enabled: true,

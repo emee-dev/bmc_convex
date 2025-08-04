@@ -16,24 +16,21 @@ import {
 } from "@/hooks/use-vars";
 import { cn } from "@/lib/utils";
 import { Check, X } from "lucide-react";
-import { Dispatch, SetStateAction } from "react";
+
+type VarsDialogProps = {
+  dialogOpen: boolean;
+  variables: Variable[];
+  setDialogOpen: (state: boolean) => void;
+};
 
 export function VarsDialog({
   variables,
   dialogOpen,
   setDialogOpen,
-}: {
-  dialogOpen: boolean;
-  variables: Variable[];
-  setDialogOpen: Dispatch<SetStateAction<boolean>>;
-}) {
+}: VarsDialogProps) {
   const isDefaultListHidden = useListVisibility();
-  const { addVariable, deleteVariable, init, updateVariable, toggleVariable } =
+  const { addVariable, deleteVariable, updateVariable, toggleVariable } =
     useVariableActions();
-
-  const handleSave = () => {
-    setDialogOpen(false);
-  };
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

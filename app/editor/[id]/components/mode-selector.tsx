@@ -92,7 +92,7 @@ export function ModeSelector({
     <div className="grid gap-2">
       <HoverCard openDelay={200}>
         <HoverCardTrigger asChild>
-          <Label htmlFor="mode">Mode</Label>
+          <Label htmlFor="mode">Template type</Label>
         </HoverCardTrigger>
         <HoverCardContent
           align="start"

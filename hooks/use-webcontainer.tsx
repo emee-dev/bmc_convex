@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import type { WebContainer } from "@webcontainer/api"; // optional
+import type { WebContainer } from "@webcontainer/api";
+import { useEffect, useState } from "react";
 
 export const useWebContainer = (
   timeoutMs: number,

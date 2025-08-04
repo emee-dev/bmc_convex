@@ -10,7 +10,9 @@
 
 import type * as auth from "../auth.js";
 import type * as http from "../http.js";
-import type * as send_email from "../send_email.js";
+import type * as node_email from "../node_email.js";
+import type * as node_utils from "../node_utils.js";
+import type * as resend from "../resend.js";
 import type * as template from "../template.js";
 
 import type {
@@ -30,7 +32,9 @@ import type {
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   http: typeof http;
-  send_email: typeof send_email;
+  node_email: typeof node_email;
+  node_utils: typeof node_utils;
+  resend: typeof resend;
   template: typeof template;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

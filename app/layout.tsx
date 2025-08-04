@@ -18,7 +18,7 @@ const exo = Exo({
 });
 
 export const metadata: Metadata = {
-  title: "Convex BMC",
+  title: "Buymeacommit",
   description:
     "A developer-focused platform for supporting creators through donations.",
 };

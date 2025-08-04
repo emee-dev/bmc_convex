@@ -1,4 +1,5 @@
-import { FileSystemTree, WebContainer } from "@webcontainer/api";
+import { DirEnt, FileSystemTree, WebContainer } from "@webcontainer/api";
+import { TemplateId, TemplateSelector } from "./utils";
 
 export const initialFiles: FileSystemTree = {
   "package.json": {
@@ -11,6 +12,7 @@ export const initialFiles: FileSystemTree = {
     "scripts": {},
     "dependencies": {
       "@react-email/components": "0.3.2",
+      "@react-email/render": "1.1.3",
       "tsx": "4.20.3"
     }
   }`,
@@ -48,6 +50,16 @@ export const initialFiles: FileSystemTree = {
   JSON.stringify({
     preview_content: "This is preview.",
     html_content: "This is HTML.",
+  })
+);
+`,
+    },
+  },
+  "newsletter.tsx": {
+    file: {
+      contents: `process.stdout.write(
+  JSON.stringify({
+    preview_content: "This is preview.",
   })
 );
 `,
@@ -95,19 +107,40 @@ export const initialFiles: FileSystemTree = {
   },
 };
 
-export const runScript = async (
-  instance: WebContainer,
-  script: "ssr.tsx"
-): Promise<string> => {
-  const installProcess = await instance.spawn("pnpm", ["tsx", script]);
+export const emailIds: TemplateId[] = [
+  "monthly_donation_subscription",
+  "monthly_donation_cancellation",
+  "onetime_gold_donation",
+  "onetime_silver_donation",
+  "onetime_bronse_donation",
+  "newsletter_subscription",
+  "newsletter_cancellation",
+];
 
-  return new Promise((resolve) => {
-    installProcess.output.pipeTo(
-      new WritableStream({
-        write(data) {
-          resolve(data);
-        },
-      })
-    );
+export const writeTemplatesToFs = async (
+  templates: TemplateSelector[],
+  instance: WebContainer
+) => {
+  try {
+    for (const item of templates) {
+      if (item.templateId === "utils") {
+        await instance.fs.writeFile(`${item.templateId}.ts`, item.file_content);
+      } else {
+        await instance.fs.writeFile(
+          `${item.templateId}.tsx`,
+          item.raw_jsx_content
+        );
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const ls = async (instance: WebContainer): Promise<DirEnt<string>[]> => {
+  const ls = await instance.fs.readdir("/", {
+    withFileTypes: true,
   });
+
+  return ls;
 };

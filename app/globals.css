@@ -102,4 +102,9 @@
   .container {
     @apply px-4 xl:px-6 mx-auto max-w-screen-2xl;
   }
+
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    @apply appearance-none;
+  }
 }

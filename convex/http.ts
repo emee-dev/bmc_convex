@@ -1,7 +1,7 @@
 import { httpRouter } from "convex/server";
 import { auth } from "./auth";
 import { httpAction } from "./_generated/server";
-import { resend } from "./send_email";
+import { resend } from "./resend";
 
 const http = httpRouter();
 

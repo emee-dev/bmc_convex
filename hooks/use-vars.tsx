@@ -1,6 +1,5 @@
 "use client";
 
-import { vars } from "@/emails/vars";
 import { create } from "zustand";
 
 export interface Variable {
@@ -23,17 +22,20 @@ export type VariableActions = {
   deleteVariable: (key: string) => void;
   toggleVariable: (args: { id: string; is_enabled: boolean }) => void;
   toggleDefaultList: (state: boolean) => void;
+  toggleVarsDialog: (state: boolean) => void;
   init: (vars: Variable[]) => void;
 };
 
 type VariableState = {
+  isDialogOpen: boolean;
   isDefaultHidden: boolean;
   vars: Variable[];
   actions: VariableActions;
 };
 
 const useVariableStore = create<VariableState>((set, get) => ({
-  vars: [...vars] as any,
+  vars: [],
+  isDialogOpen: false,
   isDefaultHidden: true,
   actions: {
     addVariable: (arg) => {
@@ -47,7 +49,9 @@ const useVariableStore = create<VariableState>((set, get) => ({
         return;
       }
 
-      set({ vars: [...oldVars, arg] });
+      const vars = [...oldVars, arg];
+
+      set({ vars });
     },
 
     updateVariable: (args) => {
@@ -64,11 +68,11 @@ const useVariableStore = create<VariableState>((set, get) => ({
       set({ vars });
     },
 
-    deleteVariable: (key: string) =>
+    deleteVariable: (key) =>
       set((state) => {
-        const updatedList = state.vars.filter((item) => item.key !== key);
+        const vars = state.vars.filter((item) => item.key !== key);
 
-        return { vars: updatedList };
+        return { vars: vars };
       }),
 
     toggleVariable: (args) => {
@@ -85,10 +89,13 @@ const useVariableStore = create<VariableState>((set, get) => ({
       set({ vars });
     },
     toggleDefaultList: (args) => set((state) => ({ isDefaultHidden: args })),
-    init: (vars) => set((state) => ({ vars })),
+    toggleVarsDialog: (args) => set((state) => ({ isDialogOpen: args })),
+    init: (vars) => set((_) => ({ vars })),
   },
 }));
 
+export const useVariableDialog = () =>
+  useVariableStore((state) => state.isDialogOpen);
 export const useVariables = () => useVariableStore((state) => state.vars);
 export const useVariableActions = () =>
   useVariableStore((state) => state.actions);

@@ -80,7 +80,8 @@ Take care,
 
 
 export const jsx_templates: Record<TemplateId, string> = {
-  monthly_donation_subscription: `import {
+  monthly_donation_subscription: `import React from "react";
+import {
   Body,
   Container,
   Head,
@@ -129,7 +130,8 @@ const MonthlyDonationSubscription = ({ variables }: EmailProps) => {
 };
 
 export default MonthlyDonationSubscription;`,
-  monthly_donation_cancellation: `import {
+  monthly_donation_cancellation: `import React from "react";
+import {
   Body,
   Container,
   Head,
@@ -180,7 +182,8 @@ const MonthlyDonationCancellation = ({ variables }: EmailProps) => {
 };
 
 export default MonthlyDonationCancellation;`,
-  newsletter_subscription: `import {
+  newsletter_subscription: `import React from "react";
+import {
   Body,
   Container,
   Head,
@@ -226,7 +229,8 @@ const NewsletterSubscription = ({ variables }: EmailProps) => {
 };
 
 export default NewsletterSubscription;`,
-  newsletter_cancellation: `import {
+  newsletter_cancellation: `import React from "react";
+import {
   Body,
   Container,
   Head,
@@ -273,7 +277,8 @@ const NewsletterCancellation = ({ variables }: EmailProps) => {
 };
 
 export default NewsletterCancellation;`,
-  onetime_gold_donation: `import {
+  onetime_gold_donation: `import React from "react";
+import {
   Body,
   Container,
   Head,
@@ -322,7 +327,8 @@ const OneTimeGoldDonation = ({ variables }: EmailProps) => {
 };
 
 export default OneTimeGoldDonation;`,
-  onetime_silver_donation: `import {
+  onetime_silver_donation: `import React from "react";
+import {
   Body,
   Container,
   Head,
@@ -362,14 +368,15 @@ const OneTimeSilverDonation = ({ variables }: EmailProps) => {
 };
 
 export default OneTimeSilverDonation;`,
-  onetime_bronse_donation: `import {
+  onetime_bronse_donation: `import React from "react";
+import {
   Body,
   Container,
   Head,
   Heading,
   Html,
   Preview,
-  Text
+  Text,
 } from "@react-email/components";
 import { EmailProps, styles } from "./utils";
 
