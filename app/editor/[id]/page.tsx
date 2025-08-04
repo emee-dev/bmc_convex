@@ -36,6 +36,7 @@ import {
   Copy,
   Expand,
   Hourglass,
+  Info,
   Loader,
   Loader2,
   Minimize,
@@ -49,6 +50,11 @@ import { use, useEffect, useRef, useState } from "react";
 import { ModeSelector } from "./components/mode-selector";
 import { TemplateActions } from "./components/template-actions";
 import { TemplateFileSelector } from "./components/template-file-selector";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 type User = {
   id: string;
@@ -247,6 +253,27 @@ export default function TemplateEditor(props: TemplateEditorProps) {
     <div className="h-full flex-col md:flex">
       <div className="container flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16">
         <h2 className="text-lg font-semibold">Editor</h2>
+        <HoverCard>
+          <HoverCardTrigger asChild>
+            <Button
+              variant="link"
+              className="p-0 ml-3 h-auto text-muted-foreground hover:text-foreground"
+              aria-label="Show variable usage info"
+            >
+              <Info className="w-4 h-4" />
+            </Button>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm leading-relaxed">
+            <div className="flex flex-col gap-2">
+              <p>
+                Use{" "}
+                <code className="bg-muted px-1 py-0.5 rounded text-foreground font-mono">{`{{variable_name}}`}</code>{" "}
+                to insert your variables dynamically.
+              </p>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
+
         <Authenticated>
           <div className="ml-auto flex w-full space-x-2 sm:justify-end">
             {templates && (
