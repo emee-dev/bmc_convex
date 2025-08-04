@@ -27,6 +27,7 @@ import {
   Copy,
   Expand,
   Hourglass,
+  Info,
   Loader,
   Loader2,
   Minimize,
@@ -38,6 +39,11 @@ import {
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { pandaChangelog } from "./data";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 export default function TemplateEditor() {
   const sendNewsletter = useAction(api.node_email.sendNewsletterEmail);
@@ -125,6 +131,22 @@ export default function TemplateEditor() {
     <div className="h-full flex-col md:flex">
       <div className="container flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-16">
         <h2 className="text-lg font-semibold">Editor</h2>
+        <HoverCard>
+          <HoverCardTrigger asChild>
+            <Button
+              variant="link"
+              className="p-0 ml-3 h-auto text-muted-foreground hover:text-foreground"
+              aria-label="Show variable usage info"
+            >
+              <Info className="w-4 h-4" />
+            </Button>
+          </HoverCardTrigger>
+          <HoverCardContent className="w-80 text-sm leading-relaxed">
+            <div className="flex flex-col gap-2">
+              <p>Variables are not supported here.</p>
+            </div>
+          </HoverCardContent>
+        </HoverCard>
         <Authenticated>
           <div className="ml-auto flex w-full space-x-2 sm:justify-end">
             {data && data.html_content && editorValue && (
