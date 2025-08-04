@@ -144,6 +144,7 @@ export default function TemplateEditor() {
           <HoverCardContent className="w-80 text-sm leading-relaxed">
             <div className="flex flex-col gap-2">
               <p>Variables are not supported here.</p>
+              <p>Reload page or clear cache if editor fails.</p>
             </div>
           </HoverCardContent>
         </HoverCard>

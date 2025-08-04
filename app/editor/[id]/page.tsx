@@ -270,6 +270,7 @@ export default function TemplateEditor(props: TemplateEditorProps) {
                 <code className="bg-muted px-1 py-0.5 rounded text-foreground font-mono">{`{{variable_name}}`}</code>{" "}
                 to insert your variables dynamically.
               </p>
+              <p>Reload page or clear cache if editor fails.</p>
             </div>
           </HoverCardContent>
         </HoverCard>
