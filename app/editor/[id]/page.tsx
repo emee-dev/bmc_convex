@@ -161,7 +161,7 @@ export default function TemplateEditor(props: TemplateEditorProps) {
       }
     };
 
-    console.log("vars", vars);
+ 
     if (vars) {
       init(vars.default);
     }

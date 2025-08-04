@@ -22,4 +22,3 @@ The final HTML is then sent via Convex Resend component, ensuring compatibility 
 
 **Note:**
 The file editor logic from `components/editor` and `components/editor-utils` has been reused to render variables more intuitively. This reuse accounts for less than 5% of the overall codebase.
- 

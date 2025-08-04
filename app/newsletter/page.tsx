@@ -11,7 +11,6 @@ import { useClipboard } from "@/hooks/use-clipboard";
 import { useDebouncedFileUpdate } from "@/hooks/use-debounced-file-update";
 import { useInstallDependencies } from "@/hooks/use-install-dependencies";
 import { useRenderScript } from "@/hooks/use-render-script";
-import { useVariableActions } from "@/hooks/use-vars";
 import { useWebContainer } from "@/hooks/use-webcontainer";
 import { cn } from "@/lib/utils";
 import { initialFiles } from "@/lib/webcontainer";
@@ -55,7 +54,6 @@ export default function TemplateEditor() {
     runNewsletter,
   } = useRenderScript("newsletter.tsx");
   const { installDeps, error, status } = useInstallDependencies();
-  const { init } = useVariableActions();
   const { updateNewsletterFile } = useDebouncedFileUpdate();
   const { copy } = useClipboard();
 
@@ -93,7 +91,7 @@ export default function TemplateEditor() {
       }
     };
 
-    // initWebContainer();
+    initWebContainer();
   }, []);
 
   // Install dependencies
