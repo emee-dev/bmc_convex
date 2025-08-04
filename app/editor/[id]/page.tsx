@@ -161,13 +161,15 @@ export default function TemplateEditor(props: TemplateEditorProps) {
       }
     };
 
- 
-    if (vars) {
-      init(vars.default);
-    }
-
     initWebContainer();
   }, []);
+
+  useEffect(() => {
+    if (vars) {
+      console.log("Vars", vars);
+      init(vars.default);
+    }
+  }, [vars]);
 
   // Install dependencies
   useEffect(() => {
@@ -296,7 +298,9 @@ export default function TemplateEditor(props: TemplateEditorProps) {
                           ref={editor}
                           enableVars
                           value={editorValue}
-                          readOnly={selectedTemplate !== null}
+                          readOnly={
+                            selectedTemplate !== null || !webContainerRef
+                          }
                           lineNumbers={selectedMode === "Text" ? false : true}
                           language={
                             selectedMode === "Text" ? "text" : "javascript"

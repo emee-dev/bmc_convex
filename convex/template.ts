@@ -387,7 +387,7 @@ export const searchCreators = query({
         id: c._id,
         first_name: c.first_name,
         description: c.page_description,
-        supporters: "",
+        supporters: "100",
         avatar: c.image || `https://robohash.org/${c._id}.png`,
       })),
     };

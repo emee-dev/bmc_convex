@@ -8,9 +8,10 @@ import { Input } from "@/components/ui/input";
 import { api } from "@/convex/_generated/api";
 import { useDebounce } from "@/hooks/use-debounced";
 import { usePaginatedQuery } from "convex/react";
-import { Link, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import Link from "next/link";
 
 interface CreatorSearchDialogProps {
   open: boolean;
@@ -59,33 +60,31 @@ const CreatorSearchDialog = ({
         <div className="p-6 pt-4">
           <div className="space-y-3 max-h-96 overflow-y-auto scrollbar-hide">
             {creators.map((creator, index) => (
-              <Link
-                href={`/donate/${creator.id}`}
-                key={creator.id}
-                className="flex items-center space-x-4 p-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
-              >
-                <div className="text-sm text-muted-foreground font-medium w-6">
-                  #{index + 1}
-                </div>
-                <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                  <Image
-                    alt={creator.first_name || "creator image"}
-                    src={creator.avatar}
-                    width={40}
-                    height={40}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium text-foreground text-sm">
-                    {creator.first_name}
+              <Link href={`/donate/${creator.id}`} key={creator.id}>
+                <div className="flex items-center space-x-4 p-2 rounded-lg hover:bg-muted/50 cursor-pointer transition-colors">
+                  <div className="text-sm text-muted-foreground font-medium w-6">
+                    #{index + 1}
                   </div>
-                  <div className="text-xs text-muted-foreground truncate">
-                    {creator.description}
+                  <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                    <Image
+                      alt={creator.first_name || "creator image"}
+                      src={`https://robohash.org/${creator.first_name}.png`}
+                      width={40}
+                      height={40}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
-                </div>
-                <div className="text-xs text-muted-foreground flex-shrink-0">
-                  {creator.supporters.toLocaleString()} supporters
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium text-foreground text-sm">
+                      {creator.first_name}
+                    </div>
+                    <div className="text-xs text-muted-foreground truncate">
+                      {creator.description?.slice(0, 80)}
+                    </div>
+                  </div>
+                  <div className="text-xs text-muted-foreground flex-shrink-0">
+                    {creator.supporters.toLocaleString()} supporters
+                  </div>
                 </div>
               </Link>
             ))}
