@@ -58,7 +58,7 @@ export default function TemplateEditor() {
     error: scriptError,
     isPending,
     runNewsletter,
-  } = useRenderScript("newsletter.tsx");
+  } = useRenderScript("render_newsletter.tsx");
   const { installDeps, error, status } = useInstallDependencies();
   const { updateNewsletterFile } = useDebouncedFileUpdate();
   const { copy } = useClipboard();
@@ -118,7 +118,11 @@ export default function TemplateEditor() {
 
   // Render the HTML to iframe
   useEffect(() => {
-    if (!data || !data.html_content) return;
+    if (!data || !data.html_content) {
+      return;
+    }
+
+    console.log("Data: ", data);
 
     const blob = new Blob([data.html_content], { type: "text/html" });
     const url = URL.createObjectURL(blob);
@@ -168,7 +172,7 @@ export default function TemplateEditor() {
               <Authenticated>
                 <TabsContent value="source" className="mt-0 border-0 p-0">
                   <div
-                    className={`grid h-full gap-3 grid-rows-2 lg:grid-rows-1 ${
+                    className={`grid h-full gap-3 scrollbar-hide grid-rows-2 lg:grid-rows-1 ${
                       isFullScreen ? "lg:grid-cols-1" : "lg:grid-cols-2"
                     }`}
                   >
@@ -271,8 +275,8 @@ export default function TemplateEditor() {
                               className="w-4 h-4 hover:text-black/90 text-muted-foreground"
                               size={18}
                               onClick={() => {
-                                if (!data || !data.preview_content) return;
-                                copy(data.preview_content);
+                                if (!data || !data.html_content) return;
+                                copy(data.html_content);
                               }}
                             />
                           </TooltipMsg>

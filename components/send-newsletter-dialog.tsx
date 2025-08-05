@@ -11,23 +11,15 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { api } from "@/convex/_generated/api";
-import { calculateTier, TemplateId, Tier } from "@/lib/utils";
 import { useAction } from "convex/react";
 import { Mail } from "lucide-react";
 import type React from "react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Textarea } from "./ui/textarea";
 
 type SendNewsletterDialogProps = {
   html: string | null | undefined;
   jsx: string;
-
-  // // setstates
-  // setDonationAmt: Dispatch<SetStateAction<number>>;
-  // setCustomAmt: Dispatch<SetStateAction<string>>;
-  // setIsMonthly: Dispatch<SetStateAction<boolean>>;
-  // setName: Dispatch<SetStateAction<string>>;
-  // setMessage: Dispatch<SetStateAction<string>>;
 };
 
 export function SendNewsletterDialog({ html, jsx }: SendNewsletterDialogProps) {
@@ -43,16 +35,20 @@ export function SendNewsletterDialog({ html, jsx }: SendNewsletterDialogProps) {
     e.preventDefault();
 
     if (!jsx || !html || !emailSubject || !title || !description) {
+      console.warn(
+        "Missing required email fields: jsx, html, subject, title, or description."
+      );
       return;
     }
+
     setIsSubmitting(true);
 
-    sendNewsletter({
-      description: "",
-      html: "",
-      jsx: "",
-      subject: "",
-      title: "",
+    await sendNewsletter({
+      description,
+      html,
+      jsx,
+      subject: emailSubject,
+      title,
     });
 
     setIsSubmitting(false);
@@ -79,7 +75,6 @@ export function SendNewsletterDialog({ html, jsx }: SendNewsletterDialogProps) {
 
         <form onSubmit={onSubmit} className="space-y-4">
           <div className="space-y-4">
-            {/* <Label htmlFor="email">Email Address</Label> */}
             <div className="relative">
               <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
@@ -87,6 +82,8 @@ export function SendNewsletterDialog({ html, jsx }: SendNewsletterDialogProps) {
                 type="text"
                 name="title"
                 placeholder="Title of newsletter"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 className="pl-10"
                 required
               />
@@ -101,6 +98,8 @@ export function SendNewsletterDialog({ html, jsx }: SendNewsletterDialogProps) {
                 type="text"
                 name="subject"
                 placeholder="Email subject"
+                value={emailSubject}
+                onChange={(e) => setEmailSubject(e.target.value)}
                 className="pl-10"
                 required
               />
@@ -114,6 +113,8 @@ export function SendNewsletterDialog({ html, jsx }: SendNewsletterDialogProps) {
                 id="description"
                 name="description"
                 placeholder="Newsletter description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 className="pl-10"
                 required
               />

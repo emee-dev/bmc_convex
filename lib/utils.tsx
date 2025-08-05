@@ -37,7 +37,7 @@ export type DashboardView =
   | "newsletters"
   | "donations";
 
-export type SubDashboardView = "page" | "account";
+export type SubDashboardView = "page" | "account" | "templates";
 
 export type Tier = "Gold" | "Silver" | "Bronze";
 

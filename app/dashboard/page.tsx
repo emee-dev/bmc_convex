@@ -138,41 +138,7 @@ export default function Page(props: PageProps) {
           </div>
         </header>
 
-        <div className="flex font-geist flex-1 flex-col gap-4 p-4 pt-0">
-          {query.v === "subscribers" && (
-            <div className="container mx-auto py-10">
-              <SubscribersTable />
-            </div>
-          )}
-
-          {query.v === "donations" && (
-            <div className="container mx-auto py-10">
-              <DonationsTable />
-            </div>
-          )}
-
-          {query.v === "newsletters" && (
-            <div className="container mx-auto py-10">
-              <NewsletterTable />
-            </div>
-          )}
-
-          {query.v === "settings" && (
-            <div className="container mx-auto py-10">
-              {/* @ts-expect-error it is defined */}
-              <SettingsView creator={creator} v={query.t} />
-            </div>
-          )}
-
-          {!query.v && (
-            <div className="container  mx-auto py-5 ">
-              {/* @ts-expect-error Typescript is nuts */}
-              {creator && <DashboardContent creator={creator} />}
-            </div>
-          )}
-        </div>
-
-        {/* <Authenticated>
+        <Authenticated>
           <div className="flex font-geist flex-1 flex-col gap-4 p-4 pt-0">
             {query.v === "subscribers" && (
               <div className="container mx-auto py-10">
@@ -194,18 +160,19 @@ export default function Page(props: PageProps) {
 
             {query.v === "settings" && (
               <div className="container mx-auto py-10">
-                <SettingsContent v={query.t} />
+                {/* @ts-expect-error it is defined */}
+                <SettingsView creator={creator} v={query.t} />
               </div>
             )}
 
             {!query.v && (
               <div className="container  mx-auto py-5 ">
-                 
+                {/* @ts-expect-error Typescript is nuts */}
                 {creator && <DashboardContent creator={creator} />}
               </div>
             )}
           </div>
-        </Authenticated> */}
+        </Authenticated>
         <Unauthenticated>
           <div className="flex bg-muted font-geist flex-1 flex-col gap-4 p-4 pt-0">
             <div className="flex min-h-svh flex-col items-center justify-centerx gap-6 p-6 md:p-10">

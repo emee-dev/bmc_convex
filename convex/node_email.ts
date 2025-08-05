@@ -54,6 +54,8 @@ export const sendTemplateEmail = action({
       return;
     }
 
+    console.log("Preparing to send email...");
+
     const configured_template =
       args.default_template || template.default_template;
 
@@ -94,11 +96,13 @@ export const sendTemplateEmail = action({
     const emailBody = source(variable_ctx);
 
     await resend.sendEmail(ctx, {
-      from: `${creator.name} <delivered@resend.dev>`,
+      from: `${creator.name} <delivered@bmcd.store>`,
       to: args.supporter_email,
       subject: emailSubject,
       html: emailBody,
     });
+
+    console.log("Email has been sent.");
   },
 });
 
@@ -150,7 +154,7 @@ export const sendNewsletterEmail = action({
     await Promise.all(
       subscribers.map((s) =>
         resend.sendEmail(ctx, {
-          from: `${creator.first_name} <delivered@resend.dev>`,
+          from: `${creator.first_name} <delivered@bmcd.store>`,
           to: s.supporter_email,
           subject: args.subject,
           html: args.html,

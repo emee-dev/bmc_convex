@@ -44,6 +44,51 @@ export const getTemplates = query({
   },
 });
 
+export const getTemplatesForDashboard = query({
+  args: {},
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+
+    if (userId === null) {
+      console.log("Not signed in");
+      return null;
+    }
+
+    const utils = await ctx.db
+      .query("utility_files")
+      .filter((q) => q.eq(q.field("userId"), userId))
+      .first();
+
+    if (!utils) {
+      console.log("Unable to query utils record.");
+      return;
+    }
+
+    const db = await ctx.db
+      .query("templates")
+      .filter((q) => q.eq(q.field("userId"), userId))
+      .collect();
+
+    return db.map((i) => ({
+      _id: i._id,
+      templateId: i.templateId,
+      default_template: i.default_template,
+    }));
+  },
+});
+
+export const updateTemplateMode = mutation({
+  args: {
+    id: v.id("templates"),
+    default_template: v.union(v.literal("Text"), v.literal("Jsx")),
+  },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.id, {
+      default_template: args.default_template,
+    });
+  },
+});
+
 export const testInsert = mutation({
   args: {
     userId: v.string(),
@@ -439,7 +484,15 @@ export const handleDonation = action({
       });
     }
 
-    await ctx.runMutation(api.template.storeDonation, args);
+    await ctx.runMutation(api.template.storeDonation, {
+      creatorId: args.creatorId,
+      donation_amount: args.donation_amount,
+      is_monthly: args.is_monthly,
+      supporter_email: args.supporter_email,
+      tier: args.tier,
+      message: args.message,
+      supporter_name: args.supporter_name,
+    });
 
     // Send email
     await ctx.runAction(api.node_email.sendTemplateEmail, {

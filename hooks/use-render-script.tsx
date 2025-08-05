@@ -16,7 +16,7 @@ type RenderResult = {
 };
 
 export function useRenderScript(
-  script: "render_template.tsx" | "newsletter.tsx"
+  script: "render_template.tsx" | "render_newsletter.tsx"
 ) {
   const [data, setData] = useState<RenderResult | null>(null);
   const [error, setError] = useState<unknown>(null);
@@ -68,16 +68,17 @@ export function useRenderScript(
     setData(null);
     setError(null);
 
-    if (script !== "newsletter.tsx") return;
-
     try {
-      const content = prepareNewsletter(script);
+      const content = prepareNewsletter("newsletter");
       console.log("Content: ", content);
 
       // Overwrite the render script
-      await instance.fs.writeFile(script, content);
+      await instance.fs.writeFile("render_newsletter.tsx", content);
 
-      const evalProcess = await instance.spawn("pnpm", ["tsx", script]);
+      const evalProcess = await instance.spawn("pnpm", [
+        "tsx",
+        "render_newsletter.tsx",
+      ]);
 
       const result = await new Promise<RenderResult>((resolve, reject) => {
         evalProcess.output
@@ -153,7 +154,7 @@ export const prepareTemplate = (
   return content;
 };
 
-export const prepareNewsletter = (newsletter: "newsletter.tsx"): string => {
+export const prepareNewsletter = (newsletter: "newsletter"): string => {
   const content = `import React from "react";
   import { pretty, render } from "@react-email/render";
   import Template from "./${newsletter}";

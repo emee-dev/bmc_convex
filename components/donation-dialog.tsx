@@ -66,19 +66,23 @@ export function DonationDialog({
 
     let templateId: TemplateId | null = null;
 
-    if (tier === "Gold" && !isMonthly) {
-      templateId === "onetime_gold_donation";
-    } else if (tier === "Silver" && !isMonthly) {
-      templateId === "onetime_silver_donation";
-    } else if (tier === "Bronze" && !isMonthly) {
-      templateId === "onetime_bronze_donation";
-    } else {
-      if (tiers.includes(tier) && isMonthly) {
-        templateId = "monthly_donation_subscription";
+    if (!isMonthly) {
+      if (tier === "Gold") {
+        templateId = "onetime_gold_donation";
+      } else if (tier === "Silver") {
+        templateId = "onetime_silver_donation";
+      } else if (tier === "Bronze") {
+        templateId = "onetime_bronse_donation";
       }
+    } else if (isMonthly && tiers.includes(tier)) {
+      templateId = "monthly_donation_subscription";
     }
 
-    if (!templateId) return;
+    if (!templateId) {
+      console.log("No template found.");
+      setIsSubmitting(false);
+      return;
+    }
 
     await donateCreator({
       supporter_name: name || "Anonymous",
@@ -89,7 +93,7 @@ export function DonationDialog({
       message,
       tier,
       templateId,
-      recieveUpdates
+      recieveUpdates,
     });
 
     setIsSubmitting(false);
